@@ -1,0 +1,24 @@
+{
+  "name": "MagixFiles",
+  "version": "1.0.0",
+  "description": "Gestionnaire de documents (PDF, Office, ZIP) et fichiers audio (MP3) publics et privés multimodules.",
+  "author": "Gerits Aurelien (Magix CMS)",
+  "type": "hybrid",
+  "has_config": false,
+  "core_targets": {
+    "home": 0,
+    "pages": 0,
+    "news": 0,
+    "catalog": 0,
+    "category": 0,
+    "product": 1,
+    "about": 0
+  },
+  "default_hooks": [
+    "displayProductExtraContent",
+    "displayPageBottom",
+    "displayCategoryBottom",
+    "displayNewsBottom",
+    "displayAboutBottom"
+  ]
+}
