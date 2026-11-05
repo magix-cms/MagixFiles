@@ -62,6 +62,10 @@ class FrontendController extends BaseController
      * Vérifie si l'utilisateur connecté possède le produit via Magixcartpay
      * et libère immédiatement le verrou de session PHP pour ne pas bloquer la navigation.
      */
+    /**
+     * Vérifie si l'utilisateur connecté possède le produit via Magixcartpay
+     * et libère immédiatement le verrou de session PHP pour ne pas bloquer la navigation.
+     */
     public static function userHasAccessToPrivateItem(string $itemType, int $itemId): bool
     {
         $session = new Session(true, 'magix_sess_id');
@@ -74,16 +78,21 @@ class FrontendController extends BaseController
             session_write_close();
         }
 
+        // Si l'utilisateur n'est pas connecté, accès refusé d'office
         if ($idAccount <= 0) {
             return false;
         }
 
+        // Vérification de l'achat si le module Magixcartpay est installé et que c'est un produit
         if ($itemType === 'product' && class_exists('\Plugins\Magixcartpay\db\MagixcartpayFrontDb')) {
             $cartDb = new \Plugins\Magixcartpay\db\MagixcartpayFrontDb();
             return $cartDb->hasPurchasedProduct($idAccount, $itemId);
         }
 
-        return true;
+        // CORRECTION DE SÉCURITÉ (F1) : Fail-Closed
+        // Si on arrive ici (ex: Magixcartpay non installé ou type != product),
+        // on refuse l'accès par défaut pour éviter de distribuer des fichiers privés gratuitement.
+        return false;
     }
 
     /**
